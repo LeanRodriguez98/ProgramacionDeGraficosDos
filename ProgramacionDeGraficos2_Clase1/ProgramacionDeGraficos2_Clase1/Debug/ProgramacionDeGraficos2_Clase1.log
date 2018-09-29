@@ -1,0 +1,4 @@
+﻿  main.cpp
+c:\users\lean1\desktop\programaciondegraficos2_clase1\enginedll\window.h(19): warning C4251: 'Window::windowName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' necesita tener una interfaz DLL para que la utilicen los clientes de class 'Window'
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.13.26128\include\xstring(4273): note: vea la declaración de 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+  ProgramacionDeGraficos2_Clase1.vcxproj -> C:\Users\lean1\Desktop\ProgramacionDeGraficos2_Clase1\Debug\ProgramacionDeGraficos2_Clase1.exe
