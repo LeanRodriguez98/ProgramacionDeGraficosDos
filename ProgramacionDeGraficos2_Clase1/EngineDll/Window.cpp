@@ -1,8 +1,7 @@
 #include "Window.h"
-
 #include <GLFW/glfw3.h>
 
-Window::Window(int _whith,int _height,  char* _windowName)
+Window::Window(int _whith,int _height,  char * _windowName)
 {
 	height = _height;
 	whith = _whith;
@@ -17,7 +16,7 @@ Window::~Window()
 
 bool Window::start()
 {
-	std::cout << "Started Window" << std::endl;
+	cout << "Started Window" << endl;
 
 	if (!glfwInit())
 	{
@@ -43,7 +42,7 @@ bool Window::stop()
 
 	if (window != NULL)
 	{
-		glfwDestroyWindow((GLFWwindow*)window);
+		glfwDestroyWindow((GLFWwindow *)window);
 	}
 
 	return false;
@@ -53,7 +52,7 @@ bool Window::ShouldClose()
 {
 	if (window != NULL)
 	{
-		return glfwWindowShouldClose((GLFWwindow*)window);
+		return glfwWindowShouldClose((GLFWwindow *)window);
 	}
 	return true;
 }
@@ -63,7 +62,7 @@ void Window::PollEvents()
 	glfwPollEvents();
 }
 
-void* Window::GetWindowPtr() 
+void * Window::GetWindowPtr() 
 {
 	return window;
 }

@@ -2,7 +2,6 @@
 #include "TypeDefs.h"
 #include <iostream>
 
-
 GameBase::GameBase()
 {
 	renderer = new Renderer;
@@ -16,17 +15,17 @@ GameBase::~GameBase()
 
 bool GameBase::start()
 {
-	window = new Window(800, 600,  (char*)"window");
+	window = new Window(800, 600,  (char *)"window");
 	window->start();
 
-	if (!renderer->start(window))
+	if (!renderer->Start(window))
 	{
-		std::cout << "no se pudo iniciar el renderer" << std::endl;
-		std::cin.get();
+		cout << "no se pudo iniciar el renderer" << endl;
+		cin.get();
 		return false;
 	}
 
-	renderer->setClearColor(0,1,0,1);
+	renderer->SetClearColor(0.5f,0.5f,0.5f,1);
 
 	return onStart();
 
@@ -35,10 +34,10 @@ bool GameBase::start()
 bool GameBase::stop()
 {
 	onStop();
-	if (renderer->stop())
+	if (!renderer->Stop())
 	{
-		std::cout << "no se pudo detener el renderer" << std::endl;
-		std::cin.get();
+		cout << "no se pudo detener el renderer" << endl;
+		cin.get();
 		return false;
 	}
 	window->stop();
@@ -51,9 +50,9 @@ void GameBase::loop()
 	while (!gameover && (!window->ShouldClose()))
 	{
 		gameover = onUpdate();
-		renderer->clearWindow();
+		renderer->ClearWindow();
 		OnDraw();
-		renderer->swapBuffer();
+		renderer->SwapBuffer();
 		window->PollEvents();
 
 	}

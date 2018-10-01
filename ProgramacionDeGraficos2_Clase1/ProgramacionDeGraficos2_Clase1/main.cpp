@@ -1,6 +1,6 @@
-
 #include "Game.h"
 #include <iostream>
+using namespace std;
 int main() 
 {
 	Game * game = new Game();
@@ -12,6 +12,6 @@ int main()
 	}
 	game->stop();
 	delete game;
-	std::cin.get();
+	cin.get();
 	return 0;
 }

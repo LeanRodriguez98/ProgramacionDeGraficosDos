@@ -1,23 +1,38 @@
 #pragma once
 #include "Exports.h"
 #include "Window.h"
+#include "../external/glm-0.9.9.0/glm/glm.hpp"
+#include "../external/glm-0.9.9.0/glm/gtc/matrix_transform.hpp"
 
+using namespace glm;
+using namespace std;
 class ENGINEDLL_API Renderer
 {
 private:
 	Window * _window;
-	void* VertexArrayID;
-
+	void * VertexArray;
+	mat4 modelMatrix;
+	mat4 viewMatrix;
+	mat4 projectionMatrix;
+	mat4 modelViewProjectionMatrix;
 public:
-	bool start(Window * window);
-	bool stop();
 	Renderer();
 	~Renderer();
-	void swapBuffer();
-	void clearWindow();
-	void setClearColor(float r, float g, float b, float a);
-	unsigned int GenerateBuffer(float * buffer, int size);
-	void DestroyBuffer(unsigned int buffer);
-	void DrawBuffer(unsigned int vtxbuffer, int size);
+	bool Start(Window * window);
+	bool Stop();
+	void SetClearColor(float r, float g, float b, float a);
+	void SwapBuffer();
+	void ClearWindow();
+	unsigned int GenerateVertexBuffer(float * buffer, int size);
+	unsigned int GenerateColorBuffer(float * buffer, int size);
+	void EnableVertexAttribute(unsigned int attribute);
+	void BindBuffer(unsigned int buffer, unsigned int attribute);
+	void DrawArrayBuffers(int size);
+	void DisableVertexAttribute(unsigned int attribute);
+	void UpdateModelViewProjectionMatrix();
+	void SetModel(mat4 model);
+	void LoadIdentityMatrix();
+	void MultiplyModel(mat4 model);
+	mat4& GetModelViewProjectionMatrix();
 };
 

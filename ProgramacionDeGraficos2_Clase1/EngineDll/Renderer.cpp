@@ -1,76 +1,132 @@
 #include "Renderer.h"
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
+
 Renderer::Renderer()
 {
 }
-
 
 Renderer::~Renderer()
 {
 }
 
-bool Renderer::start(Window * window) 
+bool Renderer::Start(Window * window)
 {
 	_window = window;
-	glfwMakeContextCurrent((GLFWwindow*)window->GetWindowPtr());
+	glfwMakeContextCurrent((GLFWwindow *)window->GetWindowPtr());
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Falló al inicializar GLEW\n");
 		return -1;
 	}
-	glGenVertexArrays(1, (GLuint*)&VertexArrayID);
-	glBindVertexArray((GLuint)VertexArrayID);
+
+	glGenVertexArrays(1, (GLuint *)&VertexArray);
+	glBindVertexArray((GLuint)VertexArray);
+
+	projectionMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.0f, 100.0f);
+
+	viewMatrix = lookAt(
+		vec3(0, 0, 3),
+		vec3(0, 0, 0),
+		vec3(0, 1, 0)
+	);
+
+	modelMatrix = mat4(1.0f);
+
+	UpdateModelViewProjectionMatrix();
+
+	cout << "Started renderer" << endl;
 	return true;
 }
 
-bool Renderer::stop()
+bool Renderer::Stop()
 {
-	return false;
+	cout << "Finished renderer" << endl;
+	return true;
 }
 
-void Renderer::swapBuffer() 
+void Renderer::SetClearColor(float r, float g, float b, float a)
 {
-	glfwSwapBuffers((GLFWwindow*)_window->GetWindowPtr());
+	glClearColor(r, g, b, a);
 }
 
-void Renderer::clearWindow()
+void Renderer::SwapBuffer()
+{
+	glfwSwapBuffers((GLFWwindow *)_window->GetWindowPtr());
+}
+
+void Renderer::ClearWindow()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::setClearColor(float r, float g, float b, float a) 
+unsigned int Renderer::GenerateVertexBuffer(float * buffer, int size)
 {
-	glClearColor(r,g,b,a);
-}
-
-unsigned int Renderer::GenerateBuffer(float * buffer, int size)
-{
-	unsigned int vertexBuffer;
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER,size, buffer, GL_STATIC_DRAW);
-	return vertexBuffer;
-}
-
-void Renderer::DestroyBuffer(unsigned int buffer) 
-{
-	//glDeleteBuffers(buffer);
-}
-
-void Renderer::DrawBuffer(unsigned int vertexbuffer, int size)
-{
-	glEnableVertexAttribArray(0);
+	unsigned int vertexbuffer;
+	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glVertexAttribPointer(
-		0,                  // atributo 0. No hay razón particular para el 0, pero debe corresponder en el shader.
-		3,                  // tamaño
-		GL_FLOAT,           // tipo
-		GL_FALSE,           // normalizado?
-		0,                    // Paso
-		(void*)0            // desfase del buffer
-	);
-	// Dibujar el triángulo !
-	glDrawArrays(GL_TRIANGLES, 0, size); // Empezar desde el vértice 0S; 3 vértices en total -> 1 triángulo
-	glDisableVertexAttribArray(0);
+	glBufferData(GL_ARRAY_BUFFER, size, buffer, GL_STATIC_DRAW);
+	return vertexbuffer;
 }
 
+unsigned int Renderer::GenerateColorBuffer(float * buffer, int size)
+{
+	unsigned int colorbuffer;
+	glGenBuffers(1, &colorbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+	glBufferData(GL_ARRAY_BUFFER, size, buffer, GL_STATIC_DRAW);
+	return colorbuffer;
+}
+
+void Renderer::EnableVertexAttribute(unsigned int attribute) 
+{
+	glEnableVertexAttribArray(attribute);
+}
+
+void Renderer::BindBuffer(unsigned int buffer, unsigned int attribute)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	glVertexAttribPointer(
+		attribute,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		(void*)0
+	);
+}
+void Renderer::DrawArrayBuffers(int size) 
+{
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, size);
+}
+
+void Renderer::DisableVertexAttribute(unsigned int attribute) 
+{
+	glDisableVertexAttribArray(attribute);
+}
+
+void Renderer::UpdateModelViewProjectionMatrix()
+{
+	modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
+}
+
+mat4& Renderer::GetModelViewProjectionMatrix()
+{
+	return modelViewProjectionMatrix;
+}
+
+void Renderer::SetModel(mat4 model)
+{
+	modelMatrix = model;
+	UpdateModelViewProjectionMatrix();
+}
+
+void Renderer::MultiplyModel(mat4 model)
+{
+	modelMatrix *= model;
+	UpdateModelViewProjectionMatrix();
+}
+
+void Renderer::LoadIdentityMatrix()
+{
+	modelMatrix = mat4(1.0f);
+}

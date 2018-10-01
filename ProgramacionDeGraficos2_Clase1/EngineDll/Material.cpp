@@ -110,3 +110,8 @@ void Material::Bind()
 {
 	glUseProgram(ProgramID);
 }
+void Material::SetMatrixProperty(const char * name, mat4& modelViewProyectionMatrix)
+{
+	unsigned int MatrixID = glGetUniformLocation(ProgramID, name);
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &modelViewProyectionMatrix[0][0]);
+}

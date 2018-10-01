@@ -5,14 +5,15 @@ class ENGINEDLL_API Triangle:public Entity
 {
 private:
 	float * vertex;
+	float * vertexColors;
+	unsigned int vertexBuffer;
+	unsigned int colorBuffer;
 	Material * material;
-	bool shouldDispause;
-	float bufferid;
+	void SetVertexBuffer(float * vertex, int cant);
 public:
 	Triangle(Renderer * renderer);
 	~Triangle();
-	void SetVertices(float vertex[], int cant);
 	void Draw() override;
-	void SetMaterial(Material* _material);
+	void SetMaterial(Material * _material);
 };
 
